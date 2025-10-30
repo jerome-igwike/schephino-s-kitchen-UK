@@ -1,0 +1,82 @@
+Project: Schephino’s Kitchen — Frontend (Step 1 of 2)
+
+Goal:
+Generate a high-fidelity, mobile-first, production-ready frontend scaffold for Schephino’s Kitchen (owner: Joseph Nkemakosi). The experience must feel native on iOS and Android (app-like, fullscreen, smooth gestures) while remaining a website (Next.js). Build only the frontend code and assets — no backend wiring in this step. I will test this bundle and upload it back for the backend to continue.
+
+Tech targets:
+- Next.js (App Router) + TypeScript
+- Tailwind CSS with a theme file for colors & fonts (see theme below)
+- Framer Motion minimal use for transitions + micro-interactions
+- PWA shell + manifest (installable on mobile) and service-worker skeleton (workbox-ready) — no server-side caching logic required now
+- Responsive mobile-first layout optimized for iOS Safari & Chrome on Android
+- Accessible components (WCAG AA aim), large tappable targets, optimized font sizing, and smooth scrolling
+- Exportable frontend as a single folder ready to deploy to Vercel; include README with env var placeholders (e.g., NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_STRIPE_PK) but do NOT implement backend calls yet
+
+Pages & components to generate (UI-only; mock data / local JSON for dynamic parts):
+1. Homepage — fullscreen hero with chef photo, reservation CTA, big tappable primary button, seasonal promo carousel
+2. Menu — category tabs, searchable list, price-range filter, dietary tags, item modal (full-screen on phones) with add-to-cart
+3. Cart & Guest Checkout UI — form UI (name, email, phone, address) and a Stripe payment placeholder button (no keys used). Include client-side validation and nice stepper animation
+4. Order confirmation (UI) — shows generated placeholder tracking ID and share button
+5. Public tracking UI — input tracking ID → show mocked timeline component
+6. Login/Register screens (UI) — Supabase auth UI stubs (magic link flow UI), and account skeleton (order history UI mocked)
+7. Admin UI (UI-only) — admin login stub and admin orders list UI that supports status badges and CSV-import UI skeleton (no parsing yet)
+8. Reusable components: Header with sticky behavior, bottom nav for mobile (Home, Menu, Orders, Account), card components, modal, toast notifications, image gallery
+9. PWA manifest + icons + placeholder splash screens for iOS/Android
+10. Small animations and gestures: pull-to-refresh stub on Menu, swipe-to-dismiss for modals, subtle parallax hero
+
+Design & Brand (apply globally):
+- Palette: deep navy `#081427`, warm gold `#D4AF37`, soft cream `#F6F2EC`, charcoal `#1F2937`
+- Fonts: Playfair Display (headings) + Inter (UI text)
+- Spacing: mobile-first generous padding; large CTAs
+- Visual language: luxury, warm, tactile (rounded corners, soft shadows, gold accents)
+- Make layouts use CSS safe-area-inset for iOS notch support
+
+Deliverable structure:
+- `/src/app` pages (Next App Router) with TypeScript components
+- `/src/components` reusable components
+- `/public` assets (sample images)
+- `tailwind.config.js` + theme tokens
+- `manifest.webmanifest` + `service-worker.js` stub
+- `README.md` with how to preview locally and what to test (exact steps to upload the folder later)
+- Include mocked JSON dataset (`/data/mock-menu.json`) that simulates CSV import structure and price_range_label
+
+Notes for v0.ai generator:
+- Focus on pixel perfection & mobile UX; use real HTML semantics and ARIA attributes
+- Do not implement actual Supabase/Stripe calls — instead leave clearly-labeled TODO stubs and env var placeholders
+- Ensure exported frontend folder is buildable (`npm run build`) and previewable locally with `npm run dev`
+- Provide a short QA checklist in README for the things I should test on mobile (PWA installability, cart flow, tracking screen, gestures)
+
+
+Frontend deliverables checklist (what I will test)
+
+Buildable frontend folder with npm run dev and npm run build success
+
+PWA manifest installable on iOS/Android (manifest present + icons + meta tags)
+
+All pages listed above present and visually coherent on mobile
+
+Mocked menu JSON loads and populates Menu UI
+
+Cart → Guest Checkout UI functioning with client-side validation
+
+Admin UI visible as UI-only (no auth enforcement)
+
+README contains exact upload instructions for step 2
+Do these in the frontend (and confirm when testing) so mobile users forget they’re on a website:
+
+PWA manifest + apple-touch-startup-image and status bar meta to make fullscreen on iOS when installed.
+
+Use display: standalone + background_color in manifest so installed page hides browser chrome.
+
+Large bottom navigation, centered primary fab CTA for “Order” (thumb reachability).
+
+Full-screen item details modal on mobile with swipe-down-to-close gesture.
+
+Use hardware-accelerated transforms (translateZ(0)) for animations; avoid heavy JS loops on mobile.
+
+Respect safe-area-inset padding on top/bottom so it looks native on phones with notches.
+
+Use 60fps-friendly Framer Motion transitions and limit simultaneous animations.
+
+Fonts: preload key fonts to avoid layout shift (CLS), and use system fallback for speed.
+End of frontend prompt.
