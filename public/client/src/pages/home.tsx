@@ -12,42 +12,42 @@ import seafoodImage from "@assets/generated_images/Gourmet_seafood_platter_f87e7
 const features = [
   {
     icon: UtensilsCrossed,
-    title: "Seasonal Menu",
-    description: "Crafted with locally sourced, premium ingredients",
+    title: "Authentic Nigerian Cuisine",
+    description: "Traditional recipes passed down through generations",
   },
   {
     icon: Clock,
-    title: "Quick Delivery",
-    description: "Fresh from our kitchen to your doorstep in 45 minutes",
+    title: "Fresh Delivery",
+    description: "Hot, delicious meals delivered straight to your door",
   },
   {
     icon: Shield,
-    title: "Quality Assured",
-    description: "Every dish prepared by our award-winning chefs",
+    title: "Quality Guaranteed",
+    description: "Made with premium ingredients and authentic spices",
   },
 ];
 
 const promoItems = [
   {
     id: 1,
-    title: "Wagyu Experience",
-    description: "Japanese A5 Wagyu Special",
+    title: "Jollof Rice",
+    description: "Our Signature Smokey Party Jollof",
     image: fineDiningImage,
-    badge: "Chef's Choice",
+    badge: "Chef's Favorite",
   },
   {
     id: 2,
-    title: "Fresh Pasta",
-    description: "Handmade Daily",
+    title: "Egusi Soup",
+    description: "Rich & Traditional",
     image: pastaImage,
-    badge: "Popular",
+    badge: "Most Popular",
   },
   {
     id: 3,
-    title: "Ocean's Bounty",
-    description: "Wild-Caught Seafood",
+    title: "Suya & Asun",
+    description: "Spiced Grilled Perfection",
     image: seafoodImage,
-    badge: "Seasonal",
+    badge: "Crowd Pleaser",
   },
 ];
 
@@ -80,11 +80,11 @@ export default function Home() {
               className="font-serif text-5xl md:text-7xl font-bold text-sidebar-foreground mb-6 leading-tight"
               data-testid="text-hero-title"
             >
-              Luxury Fine Dining,
+              Authentic Nigerian Cuisine,
               <span className="block text-primary">Delivered to You</span>
             </h1>
             <p className="text-xl md:text-2xl text-sidebar-foreground/90 mb-8 leading-relaxed" data-testid="text-hero-subtitle">
-              Experience Michelin-star quality cuisine crafted with seasonal ingredients and delivered fresh to your door.
+              Where luxury meets Lagos flavor. Experience the warmth, spice, and richness of Nigeria in every dish.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/menu">
@@ -121,6 +121,30 @@ export default function Home() {
             <div className="w-1.5 h-2 bg-primary rounded-full" />
           </div>
         </motion.div>
+      </section>
+
+      {/* Cultural Insights Section */}
+      <section className="py-16 px-6 bg-sidebar/5">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
+              From Lagos to London
+            </h2>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-4">
+              Each dish at Schephino's Kitchen carries the soul of Nigeria — from the smoky richness of our party Jollof 
+              to the aromatic depth of our Egusi soup. We honor traditional cooking methods while bringing the authentic 
+              taste of home to Nigerian families and food lovers across the UK.
+            </p>
+            <p className="text-lg text-muted-foreground/90 leading-relaxed italic">
+              "Every plate tells a story of culture, community, and the warmth of Nigerian hospitality."
+            </p>
+          </motion.div>
+        </div>
       </section>
 
       {/* Features Section */}
@@ -168,10 +192,10 @@ export default function Home() {
               This Season
             </Badge>
             <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4" data-testid="text-promo-title">
-              Featured Selections
+              Customer Favorites
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Discover our chef's handpicked seasonal favorites
+              The most loved dishes from our authentic Nigerian menu
             </p>
           </div>
 
@@ -218,10 +242,10 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <Star className="h-12 w-12 mx-auto mb-6 fill-current" />
           <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6" data-testid="text-cta-title">
-            Ready to Experience Excellence?
+            Ready for a Taste of Home?
           </h2>
           <p className="text-xl mb-8 opacity-90 leading-relaxed">
-            Join thousands of satisfied customers who trust Schephino's Kitchen for their finest dining moments.
+            From Jollof to Suya, each plate tells a story of tradition, culture, and authentic Nigerian flavors.
           </p>
           <Link href="/menu">
             <Button
@@ -246,7 +270,7 @@ export default function Home() {
                 Schephino's <span className="text-primary">Kitchen</span>
               </h3>
               <p className="text-sidebar-foreground/80 leading-relaxed">
-                Bringing luxury fine dining to your home since 2018.
+                Authentic Nigerian cuisine redefined for the UK since 2018.
               </p>
             </div>
             <div>

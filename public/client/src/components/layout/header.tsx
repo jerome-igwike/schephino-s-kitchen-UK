@@ -40,10 +40,13 @@ export function Header() {
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" data-testid="link-home">
-            <h1 className="text-2xl md:text-3xl font-serif font-bold text-sidebar-foreground hover-elevate active-elevate-2 cursor-pointer transition-all">
-              Schephino's
-              <span className="text-primary ml-2">Kitchen</span>
-            </h1>
+            <div className="flex items-center hover-elevate active-elevate-2 cursor-pointer transition-all">
+              <img 
+                src="/logos/logo-transparent.svg" 
+                alt="Schephino's Kitchen" 
+                className="h-10 md:h-12 w-auto"
+              />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

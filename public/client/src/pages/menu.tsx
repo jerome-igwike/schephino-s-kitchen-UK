@@ -10,8 +10,8 @@ import type { MenuItem } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 
-const categories = ["All", "Appetizers", "Pasta", "Main Course", "Desserts"];
-const priceRanges = ["All", "$$", "$$$", "$$$$"];
+const categories = ["All", "Soups", "Stews", "Sauces", "Rice dishes and Co", "Proteins and sides", "Party pick up menu"];
+const priceRanges = ["All", "Low", "Medium", "High"];
 const dietaryFilters = ["All", "Vegetarian", "Gluten-Free", "Dairy-Free"];
 
 export default function Menu() {
@@ -63,7 +63,7 @@ export default function Menu() {
             Our Menu
           </h1>
           <p className="text-muted-foreground text-lg">
-            Discover our selection of handcrafted dishes
+            Explore 126 authentic Nigerian dishes crafted with traditional recipes
           </p>
         </div>
 
