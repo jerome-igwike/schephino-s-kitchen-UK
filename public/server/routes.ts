@@ -1,9 +1,16 @@
 import type { Express, Request, Response } from "express";
-import { storage } from "./storage";
+import type { IStorage } from "./storage";
 import { insertMenuItemSchema, insertOrderSchema, insertUserSchema } from "@shared/schema";
 import { z } from "zod";
+import { registerStripeRoutes } from "./routes/stripe";
+import { registerAdminRoutes } from "./routes/admin";
+import { sendOrderConfirmationEmail } from "./utils/email-templates";
+import { requireAdmin } from "./middleware/auth";
 
-export function registerRoutes(app: Express) {
+export function registerRoutes(app: Express, storage: IStorage) {
+  // Register additional route modules
+  registerStripeRoutes(app, storage);
+  registerAdminRoutes(app, storage);
   // Health check
   app.get("/api/health", (req: Request, res: Response) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -37,7 +44,7 @@ export function registerRoutes(app: Express) {
   });
 
   // Create menu item (admin)
-  app.post("/api/admin/menu", async (req: Request, res: Response) => {
+  app.post("/api/admin/menu", requireAdmin, async (req: Request, res: Response) => {
     try {
       const data = insertMenuItemSchema.parse(req.body);
       const item = await storage.createMenuItem(data);
@@ -52,7 +59,7 @@ export function registerRoutes(app: Express) {
   });
 
   // Bulk create menu items from CSV (admin)
-  app.post("/api/admin/menu/bulk", async (req: Request, res: Response) => {
+  app.post("/api/admin/menu/bulk", requireAdmin, async (req: Request, res: Response) => {
     try {
       const { items } = req.body;
       if (!Array.isArray(items)) {
@@ -72,7 +79,7 @@ export function registerRoutes(app: Express) {
   });
 
   // Update menu item (admin)
-  app.patch("/api/admin/menu/:id", async (req: Request, res: Response) => {
+  app.patch("/api/admin/menu/:id", requireAdmin, async (req: Request, res: Response) => {
     try {
       const updated = await storage.updateMenuItem(req.params.id, req.body);
       if (!updated) {
@@ -86,7 +93,7 @@ export function registerRoutes(app: Express) {
   });
 
   // Delete menu item (admin)
-  app.delete("/api/admin/menu/:id", async (req: Request, res: Response) => {
+  app.delete("/api/admin/menu/:id", requireAdmin, async (req: Request, res: Response) => {
     try {
       const deleted = await storage.deleteMenuItem(req.params.id);
       if (!deleted) {
@@ -106,6 +113,15 @@ export function registerRoutes(app: Express) {
     try {
       const data = insertOrderSchema.parse(req.body);
       const order = await storage.createOrder(data);
+      
+      // Send confirmation email if email service is configured
+      try {
+        await sendOrderConfirmationEmail(order);
+      } catch (emailError) {
+        console.error("Failed to send confirmation email:", emailError);
+        // Don't fail the order creation if email fails
+      }
+      
       res.status(201).json(order);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -144,7 +160,7 @@ export function registerRoutes(app: Express) {
   // ========== ADMIN ORDER ROUTES ==========
   
   // Get all orders (admin)
-  app.get("/api/admin/orders", async (req: Request, res: Response) => {
+  app.get("/api/admin/orders", requireAdmin, async (req: Request, res: Response) => {
     try {
       const orders = await storage.getOrders();
       res.json(orders);
@@ -155,14 +171,19 @@ export function registerRoutes(app: Express) {
   });
 
   // Update order status (admin)
-  app.patch("/api/admin/orders/:id", async (req: Request, res: Response) => {
+  app.patch("/api/admin/orders/:id", requireAdmin, async (req: Request, res: Response) => {
     try {
-      const { status } = req.body;
+      const { status, ubaRef } = req.body;
       if (!status) {
         return res.status(400).json({ error: "Status is required" });
       }
       
-      const updated = await storage.updateOrderStatus(req.params.id, status);
+      const updates: any = { status };
+      if (ubaRef) {
+        updates.ubaRef = ubaRef;
+      }
+      
+      const updated = await storage.updateOrder(req.params.id, updates);
       if (!updated) {
         return res.status(404).json({ error: "Order not found" });
       }
@@ -203,7 +224,7 @@ export function registerRoutes(app: Express) {
   // ========== CSV EXPORT (ADMIN) ==========
   
   // Export menu as CSV
-  app.get("/api/admin/menu/export", async (req: Request, res: Response) => {
+  app.get("/api/admin/menu/export", requireAdmin, async (req: Request, res: Response) => {
     try {
       const items = await storage.getMenuItems();
       

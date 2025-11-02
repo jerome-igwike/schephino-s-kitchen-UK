@@ -4,6 +4,7 @@ export interface IStorage {
   // Menu Items
   getMenuItems(): Promise<MenuItem[]>;
   getMenuItemById(id: string): Promise<MenuItem | undefined>;
+  getMenuItemByName(name: string): Promise<MenuItem | undefined>;
   createMenuItem(item: InsertMenuItem): Promise<MenuItem>;
   updateMenuItem(id: string, updates: Partial<MenuItem>): Promise<MenuItem | undefined>;
   deleteMenuItem(id: string): Promise<boolean>;
@@ -15,6 +16,15 @@ export interface IStorage {
   getOrderByTrackingId(trackingId: string): Promise<Order | undefined>;
   createOrder(order: InsertOrder): Promise<Order>;
   updateOrderStatus(id: string, status: string): Promise<Order | undefined>;
+  updateOrder(id: string, updates: Partial<Order>): Promise<Order | undefined>;
+
+  // Dispatch Audit
+  createDispatchAudit(data: {
+    orderId: string;
+    adminId: string;
+    ubaRef: string;
+    notes: string | null;
+  }): Promise<void>;
 
   // Users
   getUserByEmail(email: string): Promise<User | undefined>;
@@ -66,6 +76,12 @@ export class MemStorage implements IStorage {
 
   async getMenuItemById(id: string): Promise<MenuItem | undefined> {
     return this.menuItems.get(id);
+  }
+
+  async getMenuItemByName(name: string): Promise<MenuItem | undefined> {
+    return Array.from(this.menuItems.values()).find(
+      (item) => item.name.toLowerCase() === name.toLowerCase()
+    );
   }
 
   async createMenuItem(item: InsertMenuItem): Promise<MenuItem> {
@@ -150,6 +166,30 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
+  async updateOrder(id: string, updates: Partial<Order>): Promise<Order | undefined> {
+    const existing = this.orders.get(id);
+    if (!existing) return undefined;
+    
+    const updated: Order = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    
+    this.orders.set(id, updated);
+    return updated;
+  }
+
+  async createDispatchAudit(data: {
+    orderId: string;
+    adminId: string;
+    ubaRef: string;
+    notes: string | null;
+  }): Promise<void> {
+    // In-memory implementation - just log for now
+    console.log('Dispatch audit created:', data);
+  }
+
   // Users
   async getUserByEmail(email: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find((user) => user.email === email);
@@ -168,4 +208,6 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Export storage instance - uses in-memory by default
+// For database storage, set DATABASE_URL and restart server
+export const storage: IStorage = new MemStorage();
